@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gBigRelease - BigQuery Release Notes Explorer</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explore, filter, and share the latest Google Cloud BigQuery release notes in a clean, modern dashboard.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Header Section -->
+        <header class="app-header">
+            <div class="brand-container">
+                <div class="logo-wrapper">
+                    <i class="fa-solid fa-database logo-icon"></i>
+                    <div class="logo-pulse"></div>
+                </div>
+                <div class="brand-text">
+                    <h1>gBigRelease</h1>
+                    <p class="subtitle">BigQuery Release Explorer</p>
+                </div>
+            </div>
+
+            <!-- Global Action Controls -->
+            <div class="control-panel">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Search updates..." autocomplete="off">
+                </div>
+
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="feature"><span class="badge feature-dot"></span>Features</button>
+                    <button class="filter-btn" data-filter="change"><span class="badge change-dot"></span>Changes</button>
+                    <button class="filter-btn" data-filter="deprecation"><span class="badge deprecation-dot"></span>Deprecations</button>
+                </div>
+
+                <button id="refreshBtn" class="btn btn-primary" title="Refresh Release Notes">
+                    <i class="fa-solid fa-arrows-rotate refresh-icon" id="refreshIcon"></i>
+                    <span>Refresh Feed</span>
+                </button>
+            </div>
+            
+            <div class="footer-credit">
+                <p>Data sourced directly from Google Cloud Platform</p>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <!-- Alert Bar (for offline/errors) -->
+            <div id="errorAlert" class="error-alert hidden">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span id="errorMessage">Failed to fetch release notes. Please try again.</span>
+                <button onclick="closeAlert()" class="close-alert-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Loader -->
+            <div id="mainLoader" class="loader-container">
+                <div class="spinner"></div>
+                <p>Fetching latest release notes...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state hidden">
+                <i class="fa-solid fa-folder-open empty-icon"></i>
+                <h3>No Updates Found</h3>
+                <p>Try adjusting your search query or filters.</p>
+            </div>
+
+            <!-- Feed Container -->
+            <div id="feedContainer" class="feed-grid hidden">
+                <!-- Cards will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Tweet Preview Modal -->
+    <div id="tweetModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-brands fa-x-twitter twitter-title-icon"></i>
+                    <h2>Tweet Composer Preview</h2>
+                </div>
+                <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Customize your post before sharing it on X / Twitter:</p>
+                <div class="tweet-box-container">
+                    <div class="tweet-avatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="tweet-content-wrapper">
+                        <textarea id="tweetTextarea" rows="5" maxlength="280"></textarea>
+                        <div class="tweet-char-counter">
+                            <span id="charCount">0</span>/280
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelTweetBtn">Cancel</button>
+                <button class="btn btn-twitter" id="submitTweetBtn">
+                    <i class="fa-brands fa-x-twitter"></i> Post Update
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
